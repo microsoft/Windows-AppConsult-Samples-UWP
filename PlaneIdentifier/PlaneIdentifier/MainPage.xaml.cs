@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.AI.MachineLearning;
 using Windows.Graphics.Imaging;
 using Windows.Media;
 using Windows.Storage;
@@ -30,8 +31,8 @@ namespace PlaneIdentifier
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            var modelFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///PlanesModel.onnx"));
-            planeModel = await PlanesModel.CreatePlanesModel(modelFile);
+            var modelFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Planes.onnx"));
+            planeModel = await PlanesModel.CreateFromStreamAsync(modelFile);
         }
 
         private async void OnRecognize(object sender, RoutedEventArgs e)
@@ -74,14 +75,15 @@ namespace PlaneIdentifier
             {
                 try
                 {
-                    PlanesModelInput inputData = new PlanesModelInput();
-                    inputData.data = frame;
+                    PlanesInput inputData = new PlanesInput();
+                    inputData.data = ImageFeatureValue.CreateFromVideoFrame(frame);
                     var results = await planeModel.EvaluateAsync(inputData);
-                    var loss = results.loss.ToList().OrderBy(x => -(x.Value));
+                    var loss = results.loss.ToList();
                     var labels = results.classLabel;
 
-                    var lossStr = string.Join(",  ", loss.Select(l => l.Key + " " + (l.Value * 100.0f).ToString("#0.00") + "%"));
-                    float value = results.loss["plane"];
+                    float value = loss.FirstOrDefault()["plane"];
+
+                    var lossStr = (value * 100.0f).ToString("#0.00") + "%";
                     bool isPlane = false;
                     if (value > 0.75)
                     {
