@@ -5,7 +5,7 @@ using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.AI.MachineLearning;
-namespace PlaneIdentifier.Desktop
+namespace PlaneIdentifier
 {
     
     public sealed class PlanesInput
@@ -16,7 +16,7 @@ namespace PlaneIdentifier.Desktop
     public sealed class PlanesOutput
     {
         public TensorString classLabel; // shape(-1,1)
-        public IList<Dictionary<string,float>> loss;
+        public IList<IDictionary<string,float>> loss;
     }
     
     public sealed class PlanesModel
@@ -38,7 +38,7 @@ namespace PlaneIdentifier.Desktop
             var result = await session.EvaluateAsync(binding, "0");
             var output = new PlanesOutput();
             output.classLabel = result.Outputs["classLabel"] as TensorString;
-            output.loss = result.Outputs["loss"] as IList<Dictionary<string,float>>;
+            output.loss = result.Outputs["loss"] as IList<IDictionary<string,float>>;
             return output;
         }
     }
