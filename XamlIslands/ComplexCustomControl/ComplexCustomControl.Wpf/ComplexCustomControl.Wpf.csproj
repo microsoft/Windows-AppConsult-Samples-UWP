@@ -7,18 +7,17 @@
     <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
     <Platforms>x64;x86</Platforms>
     <AssetTargetFallback>uap10.0.18362</AssetTargetFallback>
-  <AssetTargetFallback>uap10.0.18362</AssetTargetFallback>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="ComplexCustomControl.MyControl" />
-    <Content Include="..\ComplexCustomControl.MyControl\bin\$(PlatformName)\$(ConfigurationName)\**\*.xbf" LinkBase="ComplexCustomControl.MyControl">
+  <!--<ItemGroup>
+    <Folder Include="ComplexCustomControl.Uwp" />
+    <Content Include="..\ComplexCustomControl.Uwp\bin\$(PlatformName)\$(ConfigurationName)\**\*.xbf" LinkBase="ComplexCustomControl.Uwp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Toolkit.Wpf.UI.XamlHost" Version="6.0.0-preview6.4" />
+    <PackageReference Include="Microsoft.Toolkit.Wpf.UI.XamlHost" Version="6.0.0-preview7.1" />
   </ItemGroup>
 
   <ItemGroup>

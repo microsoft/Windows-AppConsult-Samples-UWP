@@ -157,7 +157,7 @@
       <Version>5.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Win32.UI.XamlApplication">
-      <Version>6.0.0-preview6.4</Version>
+      <Version>6.0.0-preview7.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

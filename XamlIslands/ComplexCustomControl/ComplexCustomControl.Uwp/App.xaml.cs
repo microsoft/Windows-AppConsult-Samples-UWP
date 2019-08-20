@@ -13,7 +13,7 @@ namespace ComplexCustomControl.Uwp
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
+            this.Initialize();
         }
     }
 }
