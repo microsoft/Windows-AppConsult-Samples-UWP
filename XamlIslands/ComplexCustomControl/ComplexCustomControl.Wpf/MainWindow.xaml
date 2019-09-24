@@ -8,6 +8,8 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <xamlhost:WindowsXamlHost InitialTypeName="ComplexCustomControl.Uwp.MarkdownView" ChildChanged="WindowsXamlHost_ChildChanged" />
+        <xamlhost:WindowsXamlHost InitialTypeName="ComplexCustomControl.MyControls.MarkdownView"
+                                  ChildChanged="WindowsXamlHost_ChildChanged"
+                                  />
     </Grid>
 </Window>

@@ -1,7 +1,19 @@
-﻿using ComplexCustomControl.Uwp;
+﻿using ComplexCustomControl.MyControls;
 using Microsoft.Toolkit.Wpf.UI.XamlHost;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
 namespace ComplexCustomControl.Wpf
 {
@@ -17,9 +29,10 @@ namespace ComplexCustomControl.Wpf
 
         private void WindowsXamlHost_ChildChanged(object sender, EventArgs e)
         {
-            if (sender is WindowsXamlHost host && host.Child is MarkdownView markdownView)
+            if (sender is WindowsXamlHost windowsXamlHost &&
+             windowsXamlHost.Child is MarkdownView markdownView)
             {
-                markdownView.MarkdownText = "This is **markdown** rendered by the UWP control included in the [Windows Community Toolkit](https://docs.microsoft.com/en-us/windows/communitytoolkit/)";
+                markdownView.MarkdownText = "This is **markdown**";
             }
         }
     }

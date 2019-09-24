@@ -4,24 +4,20 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
-    <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
-    <Platforms>x64;x86</Platforms>
-    <AssetTargetFallback>uap10.0.18362</AssetTargetFallback>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
-
-  <!--<ItemGroup>
-    <Folder Include="ComplexCustomControl.Uwp" />
-    <Content Include="..\ComplexCustomControl.Uwp\bin\$(PlatformName)\$(ConfigurationName)\**\*.xbf" LinkBase="ComplexCustomControl.Uwp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>-->
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Wpf.UI.XamlHost" Version="6.0.0-preview7.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ComplexCustomControl.MyControls\ComplexCustomControl.MyControls.csproj" />
     <ProjectReference Include="..\ComplexCustomControl.Uwp\ComplexCustomControl.Uwp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.VCRTForwarders.140" Version="1.0.2-rc" />
   </ItemGroup>
 
 </Project>

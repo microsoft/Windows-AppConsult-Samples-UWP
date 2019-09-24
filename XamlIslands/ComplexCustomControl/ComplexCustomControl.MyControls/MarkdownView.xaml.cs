@@ -2,7 +2,7 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace ComplexCustomControl.Uwp
+namespace ComplexCustomControl.MyControls
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

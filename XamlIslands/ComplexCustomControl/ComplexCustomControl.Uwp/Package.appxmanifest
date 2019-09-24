@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="6929aca9-0bb3-41f8-a4ee-d8c40c13b9e1"
+    Name="d8861d77-ae81-464a-b3d8-e8112717b5d8"
     Publisher="CN=mpagani"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="6929aca9-0bb3-41f8-a4ee-d8c40c13b9e1" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="d8861d77-ae81-464a-b3d8-e8112717b5d8" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>ComplexCustomControl.Uwp</DisplayName>
