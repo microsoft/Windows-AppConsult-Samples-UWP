@@ -23,12 +23,10 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
+using Path = Windows.UI.Xaml.Shapes.Path;
 
 namespace XAMLShapesAdvancedManipulations
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
 		public MainPage()
@@ -73,7 +71,103 @@ namespace XAMLShapesAdvancedManipulations
 			line.X2 = stroke.GetInkPoints().Last().Position.X;
 			line.Y2 = stroke.GetInkPoints().Last().Position.Y;
 
+			line.Tapped += Line_Tapped;
+
 			return line;
 		}
+
+		private void Line_Tapped(object sender, TappedRoutedEventArgs e)
+		{
+			// Remove the anchor from the selected line
+			UnselectActiveLine();
+
+			System.Diagnostics.Debug.WriteLine("[PoC] Line tapped");
+			Line line = (Line)sender;
+			line.Stroke = new SolidColorBrush(Windows.UI.Colors.DarkRed);
+			line.StrokeThickness = 10;
+			line.StrokeStartLineCap = PenLineCap.Triangle;
+			line.StrokeEndLineCap = PenLineCap.Triangle;
+
+
+			int size_EndLines = 30;
+			//TODO: [PoC] - Write some 'anchors/objects' to be able to modify the lenght of the line
+			Ellipse e1 = new Ellipse
+			{
+				Fill = new SolidColorBrush(Windows.UI.Colors.OrangeRed),
+				Height = size_EndLines,
+				Width = size_EndLines
+			};
+
+			ShapesCanvas.Children.Add(e1);
+
+
+
+
+
+			Ellipse e2 = new Ellipse
+			{
+				Fill = new SolidColorBrush(Windows.UI.Colors.OrangeRed),
+				Height = size_EndLines,
+				Width = size_EndLines
+			};
+
+			ShapesCanvas.Children.Add(e2);
+
+
+
+			Canvas.SetLeft(e1, line.X1 - size_EndLines / 2);
+			Canvas.SetLeft(e2, line.X2 - size_EndLines / 2);
+			Canvas.SetTop(e1, line.Y1 - size_EndLines / 2);
+			Canvas.SetTop(e2, line.Y2 - size_EndLines / 2);
+
+
+			// Enable manipulation on the anchors
+			//e1.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
+			//e1.ManipulationStarted += E1_ManipulationStarted;
+			//e1.ManipulationDelta += E1_ManipulationDelta;
+			//e1.ManipulationCompleted += E1_ManipulationCompleted;
+
+			//e2.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
+			//e2.ManipulationStarted += E2_ManipulationStarted;
+			//e2.ManipulationDelta += E2_ManipulationDelta;
+			//e2.ManipulationCompleted += E2_ManipulationCompleted;
+
+
+			// Take this line as the one to be modified with the anchors
+			activeLine.line = line;
+			activeLine.E1 = e1;
+			activeLine.E2 = e2;
+		}
+
+
+
+		public void UnselectActiveLine()
+		{
+			if (activeLine.line != null)
+			{
+				activeLine.line.Stroke = new SolidColorBrush(Windows.UI.Colors.Green);
+				activeLine.line.StrokeThickness = 6;
+				ShapesCanvas.Children.Remove(activeLine.E1);
+				ShapesCanvas.Children.Remove(activeLine.E2);
+				ShapesCanvas.Children.Remove(activeLine.CenterEllipse);
+				activeLine.bezierPath = null;
+			}
+		}
+
+		public struct ActiveLine
+		{
+			public Line line;
+			public double initialX1;
+			public double initialY1;
+			public double initialX2;
+			public double initialY2;
+			public Ellipse E1;
+			public Ellipse E2;
+			public Ellipse CenterEllipse;
+			public double initialCenterEllipseX;
+			public double initialCenterEllipseY;
+			public Path bezierPath;
+		}
+		public ActiveLine activeLine;
 	}
 }
