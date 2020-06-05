@@ -69,7 +69,6 @@ namespace XAMLShapesManipulations
 				ManipulationModes.TranslateY;
 
 			line.ManipulationStarted += Line_ManipulationStarted;
-			line.ManipulationStarted += Line_ManipulationStarted;
 			line.ManipulationDelta += Line_ManipulationDelta;
 			line.ManipulationCompleted += Line_ManipulationCompleted; ;
 
