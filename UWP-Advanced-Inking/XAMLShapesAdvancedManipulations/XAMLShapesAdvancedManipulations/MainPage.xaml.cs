@@ -7,23 +7,12 @@
 // PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 //
 //*********************************************************
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Input.Inking;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
-using Path = Windows.UI.Xaml.Shapes.Path;
 
 namespace XAMLShapesAdvancedManipulations
 {
@@ -133,7 +122,8 @@ namespace XAMLShapesAdvancedManipulations
 			InitializeActiveLine(line, anchorOrigin, anchorEnd);
 		}
 
-		private void Anchor_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+		private void Anchor_ManipulationStarted(object sender, 
+			ManipulationStartedRoutedEventArgs e)
 		{
 			Ellipse anchor = (Ellipse)sender;
 
@@ -143,18 +133,21 @@ namespace XAMLShapesAdvancedManipulations
 			anchor.Fill = new SolidColorBrush(Windows.UI.Colors.Orange);
 		}
 
-		private void Anchor_Origin_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+		private void Anchor_Origin_ManipulationDelta(object sender, 
+			ManipulationDeltaRoutedEventArgs e)
 		{
 			AnchorManipulationDelta(sender, e, true);
 		}
 
-		private void Anchor_End_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+		private void Anchor_End_ManipulationDelta(object sender, 
+			ManipulationDeltaRoutedEventArgs e)
 		{
 			AnchorManipulationDelta(sender, e, false);
 		}
 
 
-		private void AnchorManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e,
+		private void AnchorManipulationDelta(object sender, 
+			ManipulationDeltaRoutedEventArgs e,
 			bool OriginofLine)
 		{
 			double x = e.Delta.Translation.X;
@@ -174,27 +167,31 @@ namespace XAMLShapesAdvancedManipulations
 			}
 		}
 
-		private void Anchor_Origin_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+		private void Anchor_Origin_ManipulationCompleted(object sender, 
+			ManipulationCompletedRoutedEventArgs e)
 		{
 			AnchorManipulationCompleted(sender, e, true);
 		}
 
-		private void Anchor_End_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+		private void Anchor_End_ManipulationCompleted(object sender, 
+			ManipulationCompletedRoutedEventArgs e)
 		{
 			AnchorManipulationCompleted(sender, e, false);
 		}
 
 
-		private void AnchorManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e, bool OriginofLine)
+		private void AnchorManipulationCompleted(object sender, 
+			ManipulationCompletedRoutedEventArgs e, 
+			bool OriginofLine)
 		{
-			Ellipse el = (Ellipse)sender;
-			el.RenderTransform = null;
+			Ellipse anchor = (Ellipse)sender;
+			anchor.RenderTransform = null;
 			double x = e.Cumulative.Translation.X;
 			double y = e.Cumulative.Translation.Y;
-			Canvas.SetLeft(el, Canvas.GetLeft(el) + x);
-			Canvas.SetTop(el, Canvas.GetTop(el) + y);
+			Canvas.SetLeft(anchor, Canvas.GetLeft(anchor) + x);
+			Canvas.SetTop(anchor, Canvas.GetTop(anchor) + y);
 
-			el.Fill = new SolidColorBrush(Windows.UI.Colors.Black);
+			anchor.Fill = new SolidColorBrush(Windows.UI.Colors.Black);
 
 			if (OriginofLine)
 			{
