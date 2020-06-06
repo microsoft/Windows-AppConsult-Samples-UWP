@@ -74,13 +74,9 @@ namespace XAMLShapesAdvancedManipulations
 			// Remove the anchor from the selected line
 			UnselectActiveLine();
 
-			System.Diagnostics.Debug.WriteLine("[PoC] Line tapped");
 			Line line = (Line)sender;
 			line.Stroke = new SolidColorBrush(Windows.UI.Colors.DarkRed);
 			line.StrokeThickness = 10;
-			//line.StrokeStartLineCap = PenLineCap.Triangle;
-			//line.StrokeEndLineCap = PenLineCap.Triangle;
-
 
 			int size_EndLines = 25;
 			// Create 2 circles for the ends of the line
@@ -118,11 +114,10 @@ namespace XAMLShapesAdvancedManipulations
 			anchorEnd.ManipulationDelta += Anchor_End_ManipulationDelta;
 			anchorEnd.ManipulationCompleted += Anchor_End_ManipulationCompleted;
 
-
 			InitializeActiveLine(line, anchorOrigin, anchorEnd);
 		}
 
-		private void Anchor_ManipulationStarted(object sender, 
+		private void Anchor_ManipulationStarted(object sender,
 			ManipulationStartedRoutedEventArgs e)
 		{
 			Ellipse anchor = (Ellipse)sender;
@@ -133,20 +128,20 @@ namespace XAMLShapesAdvancedManipulations
 			anchor.Fill = new SolidColorBrush(Windows.UI.Colors.Orange);
 		}
 
-		private void Anchor_Origin_ManipulationDelta(object sender, 
+		private void Anchor_Origin_ManipulationDelta(object sender,
 			ManipulationDeltaRoutedEventArgs e)
 		{
 			AnchorManipulationDelta(sender, e, true);
 		}
 
-		private void Anchor_End_ManipulationDelta(object sender, 
+		private void Anchor_End_ManipulationDelta(object sender,
 			ManipulationDeltaRoutedEventArgs e)
 		{
 			AnchorManipulationDelta(sender, e, false);
 		}
 
 
-		private void AnchorManipulationDelta(object sender, 
+		private void AnchorManipulationDelta(object sender,
 			ManipulationDeltaRoutedEventArgs e,
 			bool OriginofLine)
 		{
@@ -167,21 +162,21 @@ namespace XAMLShapesAdvancedManipulations
 			}
 		}
 
-		private void Anchor_Origin_ManipulationCompleted(object sender, 
+		private void Anchor_Origin_ManipulationCompleted(object sender,
 			ManipulationCompletedRoutedEventArgs e)
 		{
 			AnchorManipulationCompleted(sender, e, true);
 		}
 
-		private void Anchor_End_ManipulationCompleted(object sender, 
+		private void Anchor_End_ManipulationCompleted(object sender,
 			ManipulationCompletedRoutedEventArgs e)
 		{
 			AnchorManipulationCompleted(sender, e, false);
 		}
 
 
-		private void AnchorManipulationCompleted(object sender, 
-			ManipulationCompletedRoutedEventArgs e, 
+		private void AnchorManipulationCompleted(object sender,
+			ManipulationCompletedRoutedEventArgs e,
 			bool OriginofLine)
 		{
 			Ellipse anchor = (Ellipse)sender;
@@ -236,7 +231,9 @@ namespace XAMLShapesAdvancedManipulations
 		/// </summary>
 		public void UnselectActiveLine()
 		{
-			if (activeLine.line != null)
+			if (activeLine.line != null
+				&& activeLine.AnchorOrigin != null
+				&& activeLine.AnchorEnd != null)
 			{
 				activeLine.line.Stroke = new SolidColorBrush(Windows.UI.Colors.Green);
 				activeLine.line.StrokeThickness = 6;
@@ -251,7 +248,7 @@ namespace XAMLShapesAdvancedManipulations
 		/// in order to do the definitive move when the manipulation is completed.
 		/// We also move the anchors during the manipulation.
 		/// </summary>
-		public struct ActiveLine
+		private struct ActiveLine
 		{
 			public Line line;
 			public double initialX1;
@@ -262,6 +259,6 @@ namespace XAMLShapesAdvancedManipulations
 			public Ellipse AnchorEnd;
 		}
 
-		public ActiveLine activeLine;
+		private ActiveLine activeLine;
 	}
 }
