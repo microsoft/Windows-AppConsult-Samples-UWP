@@ -23,6 +23,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
+using Path = Windows.UI.Xaml.Shapes.Path;
 
 namespace XAMLShapesLineCurving
 {
@@ -77,8 +78,8 @@ namespace XAMLShapesLineCurving
 			return line;
 		}
 
-		// XAML Shapes manipulations
-		private TranslateTransform dragTranslation;
+		// XAML Shapes curving
+		private TranslateTransform curveTranslation;
 
 		private void Line_Tapped(object sender, TappedRoutedEventArgs e)
 		{
@@ -89,133 +90,174 @@ namespace XAMLShapesLineCurving
 			line.Stroke = new SolidColorBrush(Windows.UI.Colors.DarkRed);
 			line.StrokeThickness = 10;
 
-			int size_EndLines = 25;
-			// Create 2 circles for the ends of the line
-			Ellipse anchorOrigin = new Ellipse
+
+
+
+			// Display an anchor for curving
+			int size_centerLine = 45;
+			Ellipse curvingEllipse = new Ellipse
 			{
 				Fill = new SolidColorBrush(Windows.UI.Colors.OrangeRed),
-				Height = size_EndLines,
-				Width = size_EndLines
+				Height = size_centerLine,
+				Width = size_centerLine
 			};
-			ShapesCanvas.Children.Add(anchorOrigin);
 
-			Ellipse anchorEnd = new Ellipse
-			{
-				Fill = new SolidColorBrush(Windows.UI.Colors.OrangeRed),
-				Height = size_EndLines,
-				Width = size_EndLines
-			};
-			ShapesCanvas.Children.Add(anchorEnd);
+			ShapesCanvas.Children.Add(curvingEllipse);
 
-			// Put the anchors at the origin and at the end of the line
-			Canvas.SetLeft(anchorOrigin, line.X1 - size_EndLines / 2);
-			Canvas.SetLeft(anchorEnd, line.X2 - size_EndLines / 2);
-			Canvas.SetTop(anchorOrigin, line.Y1 - size_EndLines / 2);
-			Canvas.SetTop(anchorEnd, line.Y2 - size_EndLines / 2);
+			// Calculate the points for the center of the ellipse
+			double centerX = line.X1 + (line.X2 - line.X1) / 2;
+			double centerY = line.Y1 + (line.Y2 - line.Y1) / 2;
+
+			Canvas.SetLeft(curvingEllipse, centerX - size_centerLine / 2);
+			Canvas.SetTop(curvingEllipse, centerY - size_centerLine / 2);
+
+			// Enable manipulation on the anchor
+			curvingEllipse.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
+			curvingEllipse.ManipulationStarted += CurvingEllipse_ManipulationStarted;
+			curvingEllipse.ManipulationDelta += CurvingEllipse_ManipulationDelta;
+			curvingEllipse.ManipulationCompleted += CurvingEllipse_ManipulationCompleted;
 
 
-			// Enable manipulations on the anchors
-			anchorOrigin.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
-			anchorOrigin.ManipulationStarted += Anchor_ManipulationStarted;
-			anchorOrigin.ManipulationDelta += Anchor_Origin_ManipulationDelta;
-			anchorOrigin.ManipulationCompleted += Anchor_Origin_ManipulationCompleted;
 
-			anchorEnd.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
-			anchorEnd.ManipulationStarted += Anchor_ManipulationStarted;
-			anchorEnd.ManipulationDelta += Anchor_End_ManipulationDelta;
-			anchorEnd.ManipulationCompleted += Anchor_End_ManipulationCompleted;
-
-			InitializeActiveLine(line, anchorOrigin, anchorEnd);
+			InitializeActiveLine(line, curvingEllipse);
 		}
 
-		private void Anchor_ManipulationStarted(object sender,
-			ManipulationStartedRoutedEventArgs e)
+	
+
+
+
+		private void CurvingEllipse_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
 		{
-			Ellipse anchor = (Ellipse)sender;
+			Path path = activeLine.bezierPath;
+
+			if (activeLine.bezierPath == null)
+			{
+				path = DrawABezierCurve(
+					activeLine.initialX1, activeLine.initialX2,
+					activeLine.initialY1, activeLine.initialY2);
+
+				// We add the path to the Canvas
+				ShapesCanvas.Children.Add(path);
+
+				// We keep track of the bezier segment
+				activeLine.bezierPath = path;
+				activeLine.initialCenterEllipseX = activeLine.initialX1 + (activeLine.initialX2 - activeLine.initialX1) / 2;
+				activeLine.initialCenterEllipseY = activeLine.initialY1 + (activeLine.initialY2 - activeLine.initialY1) / 2;
+
+				// We remove the line
+				// i.e. the path will "replace" the line
+				ShapesCanvas.Children.Remove(activeLine.line);
+			}
+
+
+
+
 
 			// Initialize the transforms that will be used to manipulate the shape
-			dragTranslation = new TranslateTransform();
-			anchor.RenderTransform = dragTranslation;
-			anchor.Fill = new SolidColorBrush(Windows.UI.Colors.Orange);
+			curveTranslation = new TranslateTransform();
+			Ellipse el = (Ellipse)sender;
+			el.RenderTransform = curveTranslation;
+			el.Fill = new SolidColorBrush(Windows.UI.Colors.Orange);
+
 		}
 
-		private void Anchor_Origin_ManipulationDelta(object sender,
-			ManipulationDeltaRoutedEventArgs e)
+		
+
+		private void CurvingEllipse_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
 		{
-			AnchorManipulationDelta(sender, e, true);
-		}
-
-		private void Anchor_End_ManipulationDelta(object sender,
-			ManipulationDeltaRoutedEventArgs e)
-		{
-			AnchorManipulationDelta(sender, e, false);
-		}
+			
+				double x = e.Delta.Translation.X;
+				double y = e.Delta.Translation.Y;
+				curveTranslation.X += x;
+				curveTranslation.Y += y;
 
 
-		private void AnchorManipulationDelta(object sender,
-			ManipulationDeltaRoutedEventArgs e,
-			bool OriginofLine)
-		{
-			double x = e.Delta.Translation.X;
-			double y = e.Delta.Translation.Y;
-			dragTranslation.X += x;
-			dragTranslation.Y += y;
-
-			if (OriginofLine)
-			{
-				activeLine.line.X1 += x;
-				activeLine.line.Y1 += y;
-			}
-			else
-			{
-				activeLine.line.X2 += x;
-				activeLine.line.Y2 += y;
-			}
-		}
-
-		private void Anchor_Origin_ManipulationCompleted(object sender,
-			ManipulationCompletedRoutedEventArgs e)
-		{
-			AnchorManipulationCompleted(sender, e, true);
-		}
-
-		private void Anchor_End_ManipulationCompleted(object sender,
-			ManipulationCompletedRoutedEventArgs e)
-		{
-			AnchorManipulationCompleted(sender, e, false);
+				GeometryCollection gc = (GeometryCollection)activeLine.bezierPath.Data.GetValue(GeometryGroup.ChildrenProperty);
+				PathGeometry pg = (PathGeometry)gc[0];
+				PathSegmentCollection psc = (PathSegmentCollection)pg.Figures[0].Segments;
+				BezierSegment bs = (BezierSegment)psc[0];
+				bs.Point2 = new Point(bs.Point2.X + x, bs.Point2.Y + y);
 		}
 
 
-		private void AnchorManipulationCompleted(object sender,
-			ManipulationCompletedRoutedEventArgs e,
-			bool OriginofLine)
+
+
+		private void CurvingEllipse_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
 		{
-			Ellipse anchor = (Ellipse)sender;
-			anchor.RenderTransform = null;
+
+			Ellipse el = (Ellipse)sender;
+			el.RenderTransform = null;
 			double x = e.Cumulative.Translation.X;
 			double y = e.Cumulative.Translation.Y;
-			Canvas.SetLeft(anchor, Canvas.GetLeft(anchor) + x);
-			Canvas.SetTop(anchor, Canvas.GetTop(anchor) + y);
+			Canvas.SetLeft(el, Canvas.GetLeft(el) + x);
+			Canvas.SetTop(el, Canvas.GetTop(el) + y);
 
-			anchor.Fill = new SolidColorBrush(Windows.UI.Colors.Black);
+			el.Fill = new SolidColorBrush(Windows.UI.Colors.Black);
 
-			if (OriginofLine)
-			{
-				activeLine.line.X1 = activeLine.initialX1 + x;
-				activeLine.line.Y1 = activeLine.initialY1 + y;
 
-				activeLine.initialX1 = activeLine.line.X1;
-				activeLine.initialY1 = activeLine.line.Y1;
-			}
-			else
-			{
-				activeLine.line.X2 = activeLine.initialX2 + x;
-				activeLine.line.Y2 = activeLine.initialY2 + y;
+			GeometryCollection gc = (GeometryCollection)activeLine.bezierPath.Data.GetValue(GeometryGroup.ChildrenProperty);
+			PathGeometry pg = (PathGeometry)gc[0];
+			PathSegmentCollection psc = (PathSegmentCollection)pg.Figures[0].Segments;
+			BezierSegment bs = (BezierSegment)psc[0];
+			bs.Point2 = new Point(activeLine.initialCenterEllipseX + x, activeLine.initialCenterEllipseY + y);
 
-				activeLine.initialX2 = activeLine.line.X2;
-				activeLine.initialY2 = activeLine.line.Y2;
-			}
+			activeLine.initialCenterEllipseX += x;
+			activeLine.initialCenterEllipseY += y;
 		}
+
+
+		private Windows.UI.Xaml.Shapes.Path DrawABezierCurve(
+			double X1, double X2,
+			double Y1, double Y2)
+		{
+			// Define the path properties: stroke, color, thickness
+			var path = new Windows.UI.Xaml.Shapes.Path();
+			path.Stroke = new SolidColorBrush(Windows.UI.Colors.IndianRed);
+			path.StrokeThickness = 10;
+
+			// The path takes a 'GeometryGroup' for all segments of the path
+			var geometryGroup = new GeometryGroup();
+
+			// In this GeometryGroup we can add several 'PathGeometry'
+			var pathGeometry = new PathGeometry();
+
+			// In this PathGeometry, we have a 'Figures' property.
+			// We affect a 'PathFigureCollection' to this property
+			var pathFigureCollection = new PathFigureCollection();
+			// The PathFigureCollection takes some 'PathFigure'
+			var pathFigure = new PathFigure();
+			pathFigure.StartPoint = new Windows.Foundation.Point(X1, Y1);
+			pathFigureCollection.Add(pathFigure);
+			pathGeometry.Figures = pathFigureCollection;
+
+			// The PathFigure we created is empty; We just defined the starting point
+			// We now create this PathFigure with a 'PathSegmentCollection' which takes 'PathSegment'
+
+			// The PathSegment we create is a Bezier curve
+			var pathSegment = new BezierSegment();
+			pathSegment.Point1 = new Point(X1, Y1);
+			pathSegment.Point2 = new Point(X1 + (X2 - X1) / 2, Y1 + (Y2 - Y1) / 2);
+			pathSegment.Point3 = new Point(X2, Y2);
+
+			var pathSegmentCollection = new PathSegmentCollection();
+			pathSegmentCollection.Add(pathSegment);
+
+			// So we affect the PathSegmentCollection to the PathFigure
+			pathFigure.Segments = pathSegmentCollection;
+
+			// The PathFigure was already affected to the 'Figures' collection of
+			// the PathGeometry object
+			// We add this PathGeometry object to the 'GeometryGroup'
+			geometryGroup.Children.Add(pathGeometry);
+
+			// Finally, we give to the path the data corresponding to the GeometryGroup
+			path.Data = geometryGroup;
+
+			return path;
+		}
+
+
+
 
 		/// <summary>
 		/// Take this line as the one to be modified with the anchors
@@ -224,15 +266,14 @@ namespace XAMLShapesLineCurving
 		///   - keep track of its coordinates
 		///   - get the 2 anchors objects
 		/// </summary>
-		private void InitializeActiveLine(Line line, Ellipse origin, Ellipse end)
+		private void InitializeActiveLine(Line line, Ellipse curvingEllipse)
 		{
 			activeLine.line = line;
 			activeLine.initialX1 = line.X1;
 			activeLine.initialY1 = line.Y1;
 			activeLine.initialX2 = line.X2;
 			activeLine.initialY2 = line.Y2;
-			activeLine.AnchorOrigin = origin;
-			activeLine.AnchorEnd = end;
+			activeLine.CenterEllipse = curvingEllipse;
 		}
 
 
@@ -243,13 +284,12 @@ namespace XAMLShapesLineCurving
 		public void UnselectActiveLine()
 		{
 			if (activeLine.line != null
-				&& activeLine.AnchorOrigin != null
-				&& activeLine.AnchorEnd != null)
+				&& activeLine.CenterEllipse != null)
 			{
 				activeLine.line.Stroke = new SolidColorBrush(Windows.UI.Colors.Green);
 				activeLine.line.StrokeThickness = 6;
-				ShapesCanvas.Children.Remove(activeLine.AnchorOrigin);
-				ShapesCanvas.Children.Remove(activeLine.AnchorEnd);
+				ShapesCanvas.Children.Remove(activeLine.CenterEllipse);
+				activeLine.bezierPath = null;
 			}
 		}
 
@@ -266,8 +306,10 @@ namespace XAMLShapesLineCurving
 			public double initialY1;
 			public double initialX2;
 			public double initialY2;
-			public Ellipse AnchorOrigin;
-			public Ellipse AnchorEnd;
+			public Ellipse CenterEllipse;
+			public double initialCenterEllipseX;
+			public double initialCenterEllipseY;
+			public Path bezierPath;
 		}
 
 		private ActiveLine activeLine;
