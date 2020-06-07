@@ -1,0 +1,38 @@
+﻿<!--
+//*********************************************************
+//
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+//*********************************************************
+-->
+<Page
+    x:Class="InkingAndZoom.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+
+	<Grid>
+		<ScrollViewer x:Name="rootScrollViewer" 
+	ZoomMode="Enabled" MaxZoomFactor="5" MinZoomFactor="0.5"
+	HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto"
+	VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+
+
+			<Viewbox x:Name="imageViewbox">
+				<Grid>
+					<Image x:Name="floorplanImage" Source="assets/SplashScreen.scale-200.png"/>
+					<InkCanvas x:Name="inkCanvas" />
+				</Grid>
+			</Viewbox>
+
+		</ScrollViewer>
+	</Grid>
+</Page>
