@@ -29,15 +29,15 @@ import {
 
 const App: () => React$Node = () => {
 
-  const [latitude, setLatitude] = useState(0);
+  const [coordinates, setCoordinates] = useState('Coordinates not set');
 
-  const getLatitudeWithPromise = async () => {
-    var latitude = await NativeModules.GeolocationModule.getCoordinatesWithPromise();
-    setLatitude(latitude);
+  const getCoordinatesWithPromise = async () => {
+    var coordinates = await NativeModules.GeolocationModule.getCoordinatesWithPromise();
+    setCoordinates(coordinates);
   }
 
-  const getLatitudeWithCallback = () => {
-    NativeModules.GeolocationModule.getCoordinatesWithCallback( (result) => { setLatitude(result); }, (error) => console.log(error));
+  const getCoordinatesWithCallback = () => {
+    NativeModules.GeolocationModule.getCoordinatesWithCallback( (result) => { setCoordinates(result); }, (error) => console.log(error));
   }
 
   return (
@@ -54,9 +54,9 @@ const App: () => React$Node = () => {
             </View>
           )}
           <View style={styles.body}>
-            <Button title="Get latitude with Promise" onPress={getLatitudeWithPromise} />
-            <Button title="Get latitude with callback" onPress={getLatitudeWithCallback} />
-            <Text>{latitude}</Text>
+            <Button title="Get latitude with Promise" onPress={getCoordinatesWithPromise} />
+            <Button title="Get latitude with callback" onPress={getCoordinatesWithCallback} />
+            <Text>{coordinates}</Text>
           </View>
         </ScrollView>
       </SafeAreaView>
