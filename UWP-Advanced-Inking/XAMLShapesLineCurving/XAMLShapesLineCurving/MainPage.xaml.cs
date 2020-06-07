@@ -122,7 +122,7 @@ namespace XAMLShapesLineCurving
 			InitializeActiveLine(line, curvingEllipse);
 		}
 
-	
+
 
 
 
@@ -149,34 +149,28 @@ namespace XAMLShapesLineCurving
 				ShapesCanvas.Children.Remove(activeLine.line);
 			}
 
-
-
-
-
 			// Initialize the transforms that will be used to manipulate the shape
 			curveTranslation = new TranslateTransform();
 			Ellipse el = (Ellipse)sender;
 			el.RenderTransform = curveTranslation;
 			el.Fill = new SolidColorBrush(Windows.UI.Colors.Orange);
-
 		}
 
-		
+
 
 		private void CurvingEllipse_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
 		{
-			
-				double x = e.Delta.Translation.X;
-				double y = e.Delta.Translation.Y;
-				curveTranslation.X += x;
-				curveTranslation.Y += y;
+			double x = e.Delta.Translation.X;
+			double y = e.Delta.Translation.Y;
+			curveTranslation.X += x;
+			curveTranslation.Y += y;
 
 
-				GeometryCollection gc = (GeometryCollection)activeLine.bezierPath.Data.GetValue(GeometryGroup.ChildrenProperty);
-				PathGeometry pg = (PathGeometry)gc[0];
-				PathSegmentCollection psc = (PathSegmentCollection)pg.Figures[0].Segments;
-				BezierSegment bs = (BezierSegment)psc[0];
-				bs.Point2 = new Point(bs.Point2.X + x, bs.Point2.Y + y);
+			GeometryCollection gc = (GeometryCollection)activeLine.bezierPath.Data.GetValue(GeometryGroup.ChildrenProperty);
+			PathGeometry pg = (PathGeometry)gc[0];
+			PathSegmentCollection psc = (PathSegmentCollection)pg.Figures[0].Segments;
+			BezierSegment bs = (BezierSegment)psc[0];
+			bs.Point2 = new Point(bs.Point2.X + x, bs.Point2.Y + y);
 		}
 
 
