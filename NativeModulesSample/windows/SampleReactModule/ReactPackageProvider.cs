@@ -1,4 +1,4 @@
-﻿using Microsoft.ReactNative.Bridge;
+﻿using Microsoft.ReactNative;
 using Microsoft.ReactNative.Managed;
 
 namespace SampleReactModule

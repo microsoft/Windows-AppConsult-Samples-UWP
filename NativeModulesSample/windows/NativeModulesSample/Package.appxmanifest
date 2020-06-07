@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
  <Identity
-    Name="889ada6e-d7a3-4468-9c26-749831527362"
+    Name="14f4793a-c8bd-47aa-a0ae-e7a67b30b31e"
     Publisher="CN=mpagani"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="889ada6e-d7a3-4468-9c26-749831527362" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="14f4793a-c8bd-47aa-a0ae-e7a67b30b31e" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>NativeModulesSample</DisplayName>
