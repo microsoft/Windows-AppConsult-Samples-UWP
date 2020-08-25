@@ -27,4 +27,3 @@
 
 #include <winrt/GeolocationModule.h>
 
-#include "nativeModules.g.h"
