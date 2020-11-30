@@ -26,5 +26,3 @@
 #include <winrt/Microsoft.UI.Xaml.XamlTypeInfo.h>
 
 #include <winrt/GeolocationModule.h>
-
-#include "nativeModules.g.h"
