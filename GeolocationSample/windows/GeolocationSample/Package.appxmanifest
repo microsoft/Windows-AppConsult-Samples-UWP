@@ -6,12 +6,12 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   IgnorableNamespaces="uap mp">
 
-  <Identity
-    Name="d2cc41fc-e00e-47fa-87c2-b142d0c98564"
+ <Identity
+    Name="e638a1b9-ab5a-4c3b-8c56-ae8ef62da040"
     Publisher="CN=mpagani"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="d2cc41fc-e00e-47fa-87c2-b142d0c98564" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="e638a1b9-ab5a-4c3b-8c56-ae8ef62da040" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>GeolocationSample</DisplayName>
@@ -46,5 +46,6 @@
 
   <Capabilities>
     <Capability Name="internetClient" />
+    <DeviceCapability Name="location"/>
   </Capabilities>
 </Package>
